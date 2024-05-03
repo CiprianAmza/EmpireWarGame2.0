@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Title</title>
+
+</head>
+<style>
+body{
+        background: url([[@{/photos/building-background.jpeg}]])
+                    no-repeat center center fixed;
+        background-size: cover;
+        padding-bottom: 56.25%;
+    }
+
+.box{
+float: right;
+width: 500px;
+background: rgba(255,255,255,0.5);
+opacity:0.7;
+font-style: Lucinda Handwriting;
+margin: 50px;
+position: absolute;
+bottom: 0;
+left: 1%;
+
+}
+
+td {
+  text-align: center;
+  color: black;
+  text-shadow: 2px 2px 5px black;
+}
+
+.totalPage{
+  display: flex;
+  flex-direction: column;
+}
+
+.content{
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50%;
+}
+
+#gif{
+    background: url(photos/IronMineGif.gif);
+  float: left;
+  height: 400px;
+  width: 100px;
+}
+
+#tabel{
+    margin-bottom: 10%;
+    margin-left: 10.2%;
+
+}
+
+#rightPart {
+  width: 30%;
+  float: right;
+  margin-right: 5%;
+  margin-left: 62%;
+  margin-top: 5%;
+  font-family: "Segoe Script", Times, serif;
+  font-size: 14px;
+}
+
+
+    </style>
+<body class="container-fluid">
+
+<div class="body2">
+<div class="totalPage">
+    <div id="firstPanel">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Empire War Game</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/mainbuildingview">View Empire</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/map">Map</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/leaderboard">Leaderboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Messages</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" form-method="post" th:action="@{/logout}">
+                        <button class="btn btn-outline-danger" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div id="resourcePanel">
+
+
+        <div class="container-fluid" style="margin-bottom: 0.5%;">
+            <div class="d-flex justify-content-center">
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://image.shutterstock.com/z/stock-photo-a-hands-making-a-pot-on-a-pottery-wheel-illustration-752106979.jpg" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentClay}" id="currentClay"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://pngimage.net/wp-content/uploads/2018/06/legna-png-8.png" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentWood}" id="currentWood"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://as2.ftcdn.net/v2/jpg/02/12/39/71/1000_F_212397184_ssVuNCpsuzPoWcaORkqezOcK8kRpWurE.jpg" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentStone}" id ="currentStone"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://cdn.imgbin.com/0/16/5/imgbin-ingot-iron-ore-steel-metal-iron-18VQmzJ5S2DBNDsjsd2prDpfq.jpg" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentIron}" id="currentIron"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqneO7_g0xkm_cWs93hIkbQWxST1T4ANKFjlPvdFDz_3DKBgtOhTRctTki9jYlEqorTnQ&usqp=CAU" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentFood}" id="currentFood"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="data:image/jpeg;base64,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" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentFarmPopulation}" id="currentFarmPopulation"></p2>
+                        </button>
+                        <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img src="https://p.turbosquid.com/ts-thumb/VI/HOSqTn/gl9W30iB/woodencabin_sign_img/png/1540322601/300x300/sharp_fit_q85/ea022675f81df3a197c84e8997243c6ed6d9a291/woodencabin_sign_img.jpg" width="30px" height="30px">
+                        </span>
+                            <p2 th:text="${resources.currentWarehouseSpace}" id="currentWarehouseSpace"></p2>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="content">
+        <div class="rest">
+            <div id="gif">
+<!--                <img src="https://png.pngtree.com/thumb_back/fh260/back_pic/02/66/18/005789ec6ac0955.jpgs"/>-->
+                <img src="ironMineGif.gif"/>
+            </div>
+            <div id="tabel" class="box">
+
+
+                <table>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>Current level of your Wall:</td>
+                        <td>Max level of your Wall</td>
+                        <td>Current town defense:</td>
+                        <td>Town defense at next level:</td>
+                    </tr>
+                    <tr>
+                        <td><p2 text="100"/>1<br></td>
+                        <td><p2 text="150"/>15<br></td>
+                        <td><p2 text="200"/>250<br></td>
+                        <td><p2 text="250"/>400<br></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="rightPart">
+
+            <p id="text1">Main Building</p>
+            <p2 id=text2>
+                This is your Main Building. Here you can receive an excellent overview of your entire empire. As you can see on the right, this is the command-place where you can distribute your villagers to collect one of the five basic resources: Food, Clay, Wood, Stone or Iron. From bottom you can, as well, order to start improving any of your buildings. This is one of the most important buildings and also the strategical center of your empire. It is the place where you can hide in case of an enemy attack and the room where you can negotiate strategical offers with your neighbours. As you can see, all the plans are being made here. This is why, in order to reduce the time needed for improving any other building, you have to upgrade this command-post.
+            </p2>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.3/dat.gui.min.js"></script>
+<script src="https://unpkg.com/d3-delaunay@5.3.0/dist/d3-delaunay.min.js"></script>
+
+
+<script>let params = {
+  horizontalVoronoiDivisions: 7,
+  verticalVoronoiDivisions: 9,
+  voronoiIrregularity: 0.2,
+  innerShapes: 6,
+  innerShapeAngle: 0.02,
+  shadeVariance: 0.07,
+  lineThickness: 0.6,
+  hueStart: 0,
+  hueEnd: 90,
+  brightness: 95,
+  saturation: 100,
+  offset: -80,
+  animationSpeed: 500,
+  animate: true,
+  hideText: false,
+  createNew: function(){
+    resetVoronoiDesign();
+  },
+}
+
+<!--let gui = new dat.GUI();-->
+
+<!--let voronoiFolder = gui.addFolder("Voronoi Diagram");-->
+<!--let sketchFolder = gui.addFolder("Sketch Overlay");-->
+<!--let colourFolder = gui.addFolder("Colours");-->
+
+<!--voronoiFolder.add(params, "horizontalVoronoiDivisions", 1, 20, 1).name("Horiz. Divisions").onChange(function() {-->
+<!--	resetVoronoiDesign();-->
+<!--});-->
+<!--voronoiFolder.add(params, "verticalVoronoiDivisions", 1, 20, 1).name("Vert. Divisions").onChange(function() {-->
+<!--	resetVoronoiDesign();-->
+<!--});-->
+<!--voronoiFolder.add(params, "voronoiIrregularity", 0, 0.5).name("Irregularity").onChange(function() {-->
+<!--	resetVoronoiDesign();-->
+<!--});-->
+<!--sketchFolder.add(params, "innerShapes", 0, 30, 1).name("Inner Shapes").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--sketchFolder.add(params, "innerShapeAngle", 0, 1).name("Inner Angle").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--sketchFolder.add(params, "lineThickness", 0, 5).name("Thickness").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+
+<!--colourFolder.add(params, "shadeVariance", 0, 0.99).name("Hue Variance").onChange(function() {-->
+<!--  renderVoronoiDesign();-->
+<!--});-->
+<!--colourFolder.add(params, "hueStart", -30, 360, 1).name("Hue Start").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--colourFolder.add(params, "hueEnd", 0, 390, 1).name("Hue End").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--colourFolder.add(params, "saturation", 0, 100, 1).name("Saturation").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--colourFolder.add(params, "brightness", 0, 100, 1).name("Brightness").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+<!--colourFolder.add(params, "offset", -100, 100, 1).name("Edge Offset").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+
+<!--gui.add(params, "hideText").name("Hide Text").onChange(function() {-->
+<!--	renderVoronoiDesign();-->
+<!--});-->
+
+<!--gui.add(params, "animate").name("Animate");-->
+
+<!--gui.add(params, "createNew").name("Generate New Design");-->
+
+<!--let delaunay, voronoi, polygons, voronoiPoints, scaledVoronoiPoints, shapes;-->
+
+function setup(){
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 190, 100, 100, 1);
+  rectMode(CENTER);
+
+  textSize(22);
+  textAlign(CENTER);
+  textStyle(BOLD);
+  textFont('Courier New');
+
+  resetVoronoiDesign();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  renderVoronoiDesign();
+}
+
+function renderVoronoiDesign(){
+  scaleVoronoiPoints();
+  createVoronoiPolygons();
+  createShapes();
+  drawShapes();
+
+  if (params.hideText == false){
+    drawText();
+  }
+}
+
+function resetVoronoiDesign(){
+  noiseSeed(frameCount);
+  createVoronoiPoints();
+  renderVoronoiDesign();
+}
+
+function createVoronoiPoints(){
+  voronoiPoints = [];
+  //The following code is derived from this StackOverflow answer
+  //https://stackoverflow.com/questions/3667927/do-randomly-generated-2d-points-clump-together-and-how-do-i-stop-it
+  let randomnessFactor = params.voronoiIrregularity;
+
+  for (let ySubDivisions = 0; ySubDivisions < params.verticalVoronoiDivisions; ++ySubDivisions){
+    for (let xSubDivisions = 0; xSubDivisions < params.horizontalVoronoiDivisions; ++xSubDivisions){
+      let regularity = 0.5 * (1 - randomnessFactor);
+      let x = regularity + randomnessFactor * random(0, 1) + xSubDivisions / (params.horizontalVoronoiDivisions - 1);
+      let y = regularity + randomnessFactor * random(0, 1) + ySubDivisions / (params.verticalVoronoiDivisions - 1);
+      voronoiPoints.push([x - 0.5, y - 0.5]);
+    }
+  }
+}
+
+function scaleVoronoiPoints(){
+  scaledVoronoiPoints = [];
+  for (let i = 0; i < voronoiPoints.length; i++){
+    scaledVoronoiPoints.push([voronoiPoints[i][0] * windowWidth, voronoiPoints[i][1] * windowHeight]);
+  }
+}
+
+function createVoronoiPolygons(){
+  delaunay = d3.Delaunay.from(scaledVoronoiPoints);
+  voronoi = delaunay.voronoi([0, 0, windowWidth, windowHeight]);
+  polygons = voronoi.cellPolygons();
+}
+
+function drawText(){
+  noStroke();
+  fill(250);
+  rect(windowWidth / 2 - 1, windowHeight - 33, 226, 30)
+  fill(0);
+  text("Empire War Game", windowWidth / 2, windowHeight - 26);
+}
+
+<!--function createShapes(){-->
+<!--  shapes = [];-->
+<!--  for (const cell of polygons){-->
+<!--    if (cell.index % 1 == 0){-->
+<!--      shapes.push(new RecursiveShape(cell.length - 1, cell));-->
+<!--      shapes[shapes.length - 1].generateShapePoints();-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+
+<!--function draw(){-->
+<!--  if (params.animate == true){-->
+<!--    if (frameCount % 2 == 0){-->
+<!--      let innerShapeAngle = lerp(0, 0.1, (sin(frameCount/100) + 1) / 2);-->
+
+<!--      for (let i = 0; i < shapes.length; i++){-->
+<!--        shapes[i].innerShapeRotation = innerShapeAngle;-->
+<!--        shapes[i].generateShapePoints();-->
+<!--        shapes[i].draw();-->
+<!--      }-->
+
+<!--      if (params.hideText == false){-->
+<!--        drawText();-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+
+<!--function drawShapes(){-->
+<!--  background(0);-->
+<!--  for (const shape of shapes){-->
+<!--    shape.draw();-->
+<!--  }-->
+<!--}-->
+
+<!--function RecursiveShape(shapeSides, shapePoints){-->
+<!--  this.baseShapePoints = shapePoints.map((x) => x);-->
+<!--  this.numberOfShapeSides = shapeSides;-->
+<!--  this.shapePoints = [];-->
+<!--  this.numberOfInnerShapes = params.innerShapes;-->
+<!--  this.innerShapeRotation = params.innerShapeAngle;-->
+
+<!--  this.generateShapePoints = function() {-->
+<!--    this.shapePoints = this.baseShapePoints.map((x) => x);-->
+<!--    for (let i = 0; i < this.numberOfInnerShapes; i++){-->
+<!--      for (let j = 0; j < this.numberOfShapeSides; j++){-->
+<!--        let firstPoint = this.shapePoints[i * (this.numberOfShapeSides + 1) + j];-->
+<!--        let secondPoint = this.shapePoints[i * (this.numberOfShapeSides + 1) + ((j + 1) % this.numberOfShapeSides)];-->
+<!--        let xPosition = lerp(firstPoint[0], secondPoint[0], this.innerShapeRotation);-->
+<!--        let yPosition = lerp(firstPoint[1], secondPoint[1], this.innerShapeRotation);-->
+<!--        this.shapePoints.push([xPosition, yPosition]);-->
+<!--      }-->
+<!--      this.shapePoints.push([this.shapePoints[i * (this.numberOfShapeSides + 1) + (this.numberOfShapeSides + 1)][0], this.shapePoints[i * (this.numberOfShapeSides + 1) + (this.numberOfShapeSides + 1)][1]]);-->
+<!--    }-->
+<!--  }-->
+
+<!--  this.draw = function() {-->
+<!--    strokeWeight(params.lineThickness);-->
+
+<!--    let intensity = noise(this.shapePoints[0][0] / (windowWidth * (1 - params.shadeVariance)), this.shapePoints[0][1] / (windowHeight * (1 - params.shadeVariance)), frameCount / params.animationSpeed);-->
+
+<!--    let cellColour = color(lerp(params.hueStart, params.hueEnd, intensity), params.saturation, params.brightness);-->
+<!--    let strokeColour = color(lerp(params.hueStart, params.hueEnd, intensity), params.saturation, params.brightness + params.offset);-->
+
+<!--    fill(cellColour);-->
+<!--    stroke(strokeColour);-->
+
+<!--    beginShape();-->
+<!--    for (let i = 0; i < this.shapePoints.length; i++){-->
+<!--      vertex(this.shapePoints[i][0], this.shapePoints[i][1]);-->
+<!--    }-->
+<!--    endShape();-->
+
+<!--    noFill();-->
+
+<!--    for (let i = 0; i < this.numberOfInnerShapes + 1; i++){-->
+<!--      for (let j = 0; j < this.numberOfShapeSides + this.numberOfInnerShapes; j++){-->
+<!--        line(this.shapePoints[i * this.numberOfShapeSides + j][0], this.shapePoints[i * this.numberOfShapeSides + j][1], this.shapePoints[i * this.numberOfShapeSides + j + 1][0], this.shapePoints[i * this.numberOfShapeSides + j + 1][1]);-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+</script>
+</div>
+</body>
+</html>

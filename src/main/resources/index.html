@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html} xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <style>
+            .index-button {
+                text-align: center;
+                display: block;
+                padding-top: 5%;
+            }
+        </style>
+    </head>
+    <body>
+        <div layout:fragment="content" class="row" style="
+                background: url(/photos/index-background.jpeg)
+                            no-repeat center center fixed;
+                background-size: contain;
+                margin-left: 0;
+                width: 100vw;
+                height: 853px;
+                font-family: 'Mali'">
+            <div class="col-md-6" style="padding-left: 5%; padding-top: 3%; padding-right: 10%; text-align: center;">
+                <h1 style="background: #F3E9B6; font-size: 60px; opacity: 0.8;">EmpireWar Game</h1>
+            </div>
+            <div class="col-md-6" style="padding-left: 17%; padding-top: 3%; padding-right: 10%; text-align: center;">
+                <div style="background: #F3E9B6; opacity: 0.8;">
+                <h2>Team</h2>
+                <div>
+                    <strong>
+                        Amza Ciprian
+
+                    </strong>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-6" style="margin-left: 22%; padding-left: 5%; padding-right: 5%; text-align: center;">
+                <div>
+                    <strong>EmpireWar is a wonderful game with Strategy, Building, War and Management elements well embedded into the core game-play. This cool game is all about waging epic wars against the enemies, building structures, raising huge armies, advancements in research and development and it offers an amazingly immersive game-play.
+                        Start building your village from scratch using Clay, Wood, Stone or Iron<br><br>
+                        Work for resources. Raise an Empire. Create soldiers. Lead an army. <br><br>
+                        Win battles - Conquer the world!
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

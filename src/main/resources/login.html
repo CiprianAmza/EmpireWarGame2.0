@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+    <div layout:fragment="content" class="row" style="
+            background: url(/photos/login-background.jpeg)
+                        no-repeat center center fixed;
+            background-size: contain;
+            margin-left: 0;
+            width: 100vw;
+            height: 853px;
+            font-family: 'Mali'">
+        <div class="container-fluid" style="padding-top: 5%; padding-bottom: 8%; padding-left: 8%; padding-right: 40%;">
+            <div class="row" style="padding-top: 5%; padding-left: 5%;">
+                <div class="col-md-12" style="text-align: center;">
+                    <h1 style="font-size: 500%">Welcome back!</h1>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center" style="padding-top: 7%;">
+                <div class="col-md-8">
+                    <form th:action="@{/login}" method="post">
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                <span th:text="#{login.error}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <label class="form-label" for="form3Example3" style="font-size: 150%;">Username</label>
+                            <input name="username" type="text" id="form3Example3" class="form-control form-control-lg"
+                                   placeholder="Please enter username" />
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="form-outline mb-3">
+                            <label class="form-label" for="form3Example4" style="font-size: 150%;">Password</label>
+                            <input name="password" type="password" id="form3Example4" class="form-control form-control-lg"
+                                   placeholder="Enter password" />
+                        </div>
+
+                        <div class="text-center text-lg-start mt-4 pt-2">
+                            <button type="submit" class="btn btn-primary btn-lg"
+                                    style="padding-left: 2.5rem; padding-right: 2.5rem; background-color: #85A1D4;">Login</button>
+                            <p class="fw-bold mt-2 pt-1 mb-0" style="font-size: 120%;">Don't have an account? <a href="/register"
+                                                                                              class="link-danger">Register</a></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

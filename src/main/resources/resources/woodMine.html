@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row" style="
+        background: url(/photos/resources-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+    <div class="col-md-6">
+        <div style="padding-top: 20%; padding-left: 18%;">
+            <img class="mx-auto d-block" th:src="@{/gifs/woodcut.gif}" style="height: 280px; width: 600px; border-radius: 5px;"/>
+        </div>
+        <div style="padding-top: 8%; padding-left: 28%;">
+            <div style="width: 580px">
+                Your villagers are working hard to obtain wood units. Wood is one of the valuable resources for raising the Empire, required by Buildings and Technologies. The villagers use wood for shelter and protection, and also for increasing their resources.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div style="padding-left: 11%; padding-top: 11%; padding-right: 32%;">
+            <h2 style="text-align: center;"><strong>Wood mine</strong></h2>
+        </div>
+        <div style="padding-top: 12%; padding-left: 10%;">
+            <table style="background: rgba(255,255,255,0.5); opacity:1.7; width: 580px; text-align: center;">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr style="font-weight: bold;">
+                    <td>Current level</td>
+                    <td>Max level</td>
+                    <td>Current production of Wood</td>
+                    <td>Production of Wood at next level</td>
+                </tr>
+                <tr>
+                    <td><p2 th:text="${levels.woodMineLevel}"/></td>
+                    <td><p2 th:text="${levels.maxWoodMineLevel}"/></td>
+                    <td>1 unit every <p2 th:text="${woodPerHour}"/> seconds</td>
+                    <td>1 unit every <p2 th:text="${woodPerHourAtNextLevel}"/> seconds</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

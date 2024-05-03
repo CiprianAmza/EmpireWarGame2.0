@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row" style="
+        background: url(/photos/building-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+  <div class="col-md-6">
+    <div style="padding-top: 21%; padding-left: 14%;">
+      <img class="mx-auto d-block" src="https://i.gifer.com/9GEi.gif" style="height: 280px; width: 600px; border-radius: 5px;"/>
+    </div>
+    <div style="padding-top: 7%; padding-left: 28%;">
+      <div style="width: 500px;
+                            background: rgba(255,255,255,0.5);
+                            opacity:0.7;
+                            position: absolute;">
+        <table style="text-align: center;">
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td>Current level</td>
+            <td>Max level</td>
+            <td>Current town defense</td>
+            <td>Town defense at next level</td>
+          </tr>
+          <tr>
+            <td><p2 th:text="${levels.wallLevel}"/><br></td>
+            <td><p2 th:text="${levels.maxWallLevel}"/><br></td>
+            <td><p2 th:text="${currentWallDefense}"/><br></td>
+            <td><p2 th:text="${wallDefenseAtNextLevel}"/><br></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="container-fluid" style="padding-left: 11%; padding-top: 25%; padding-right: 35%; padding-bottom: 28%;">
+      <h1 style="text-align: center;"><strong>The Wall</strong></h1>
+      <br>
+      The wall is your best chance against enemy attacks.
+      <br><br>
+      Expanding the wall will increase your basic defense power and help you survive overall.
+      <br><br>
+      Build your army and strengthen your wall by increasing your resources. Your enemies have no power against you now.
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html} xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        body{
+          background-color: peach;
+          background-image:url("https://i.pinimg.com/originals/6b/bb/57/6bbb57c658b9c3fdac93c49a7355be3c.jpg");
+          background-repeat: no-repeat;
+          background-size: cover;
+}
+    </style>
+</head>
+    <body>
+   <div layout:fragment="content" class="container-fluid" style="font-family: 'Mali'; text-align: center; border-top: 30px;"><br><br><br><br><br>
+       <img class="mx-auto d-block" th:src="@{/gifs/mapemp.gif}"/>
+
+        </div>
+    </body>
+</html>

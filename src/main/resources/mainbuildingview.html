@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html} xmlns:th="https://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <style>
+
+        #buildingLive {
+            text-align: center;
+            line-height: 4;
+            font-size: 25px;
+            font-style: Lucida Console;
+            font-family: monospace;
+        }
+        #upgradeTable td, #resourcesTable td {
+            padding: 0;
+        }
+
+        * {box-sizing: border-box;}
+
+        /* Button used to open the chat form - fixed at the bottom of the page */
+        .open-button {
+          background-color: #555;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          opacity: 0.8;
+          position: fixed;
+          bottom: 23px;
+          right: 28px;
+          width: 280px;
+        }
+
+        /* The popup chat - hidden by default */
+        .chat-popup {
+          display: none;
+          position: fixed;
+          bottom: 28px;
+          right: 15px;
+          border: 3px solid #f1f1f1;
+          z-index: 9;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+          max-width: 300px;
+          padding: 10px;
+          background-color: white;
+        }
+
+        /* Full-width textarea */
+        .form-container textarea {
+          width: 100%;
+          padding: 0px;
+          margin: 5px 0 22px 0;
+          border: none;
+          background: #f1f1f1;
+          resize: none;
+          min-height: 200px;
+        }
+
+        /* When the textarea gets focus, do something */
+        .form-container textarea:focus {
+          background-color: #ddd;
+          outline: none;
+        }
+
+        /* Set a style for the submit/send button */
+        .form-container .btn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          margin-bottom:10px;
+          opacity: 0.8;
+        }
+
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+          background-color: red;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+          opacity: 1;
+        }
+
+        #refreshButton{
+            color: red;
+            margin-left: 76%;
+        }
+    </style>
+    <script>
+
+        function openForm() {
+          document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+          document.getElementById("myForm").style.display = "none";
+        }
+
+        $(document).ready(function(){
+            var updateResources = function(){
+                $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/resources",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;
+                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;
+                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;
+                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;
+                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;
+                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;
+                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;
+
+                               console.log(data.resources.secondsNeeded);
+                                console.log(data.resources);
+                                console.log(data.resources.isBuilding);
+                            if (data.resources.isBuilding == 1) {
+                                document.getElementById('buildingLive').innerHTML = "The " + data.resources.toBeUpgraded + " will be completely upgraded in " + data.resources.secondsNeeded + " seconds.";
+                                document.getElementById('buildingLive').style.visibility ="visible";
+                            }
+                            else {
+                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;
+                                document.getElementById('currentClayMineLevel').innerHTML = data.levels.clayMineLevel;
+                                document.getElementById('currentStoneMineLevel').innerHTML = data.levels.stoneMineLevel;
+                                document.getElementById('currentIronMineLevel').innerHTML = data.levels.ironMineLevel;
+                                document.getElementById('currentMainBuildingLevel').innerHTML = data.levels.mainBuildingLevel;
+                                document.getElementById('currentWarehouseLevel').innerHTML = data.levels.warehouseLevel;
+                                document.getElementById('currentFarmLevel').innerHTML = data.levels.farmLevel;
+                                document.getElementById('currentWallLevel').innerHTML = data.levels.wallLevel;
+
+                                document.getElementById('buildingLive').innerHTML = "";
+                                document.getElementById('buildingLive').style.visibility = "hidden";
+                            }
+                            }})};
+
+            setInterval(updateResources, 1000);
+        });
+
+        $(document).ready(function(){
+
+            var updateResources = function(){
+                $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/resources",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;
+                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;
+                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;
+                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;
+                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;
+                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;
+                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;
+
+                               console.log(data.resources.secondsNeeded);
+
+                                console.log(data.resources.isBuilding);
+                            if (data.resources.isBuilding == 1) {
+                                document.getElementById('buildingLive').innerHTML = data.resources.toBeUpgraded + " will be completely upgraded in " + data.resources.secondsNeeded + " seconds!";
+                                document.getElementById('buildingLive').style.visibility ="visible";
+                            } else {
+                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;
+                                document.getElementById('buildingLive').innerHTML = "";
+                                document.getElementById('buildingLive').style.visibility = "hidden";
+                            }
+                        }})};
+
+                var ajaxChat = function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/chatsource",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('totalChat').innerHTML = data.totalChat;
+                            document.getElementById("totalChat").scrollTop = document.getElementById("totalChat").scrollHeight;
+                        }})};
+            setInterval(ajaxChat, 500);
+        });
+</script>
+
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid" style="
+        background: url(/photos/mainbuildingview-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+    <div class="container-fluid" style="margin-bottom: 0.5%;">
+        <div class="d-flex justify-content-center">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/wood.jpeg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentWood}" id="currentWood"></p2>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/clay.jpg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentClay}" id="currentClay"></p2>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/stone.jpg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentStone}" id ="currentStone"></p2>
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/iron.jpg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentIron}" id="currentIron"></p2>
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/food.png}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentFood}" id="currentFood"></p2>
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/farmPopulation.jpg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentFarmPopulation}" id="currentFarmPopulation"></p2>
+                    </button>
+                    <button type="button" class="btn btn-secondary">
+                        <span class="badge badge-light">
+                            <img th:src="@{/photos/warehouseSpace.jpg}" width="30px" height="30px">
+                        </span>
+                        <p2 th:text="${resources.currentWarehouseSpace}" id="currentWarehouseSpace"></p2>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="padding-left: 13%; padding-top: 2%;">
+        <div class="col-md-6" style="text-align: center;">
+            <h2>Main Building</h2>
+            <div>
+                This is your Main Building. Here you can receive an excellent overview of your entire empire. On the right, this is the command-place where you can distribute your villagers to collect one of the five basic resources: Clay, Wood, Stone, Iron or Food.
+                <br><br> On the bottom you can order to start working on any of your buildings. This is one of the most important place - the strategical center of your empire. It is the place where you can hide in case of an enemy attack and the room where you can negotiate strategical offers with your neighbours.
+                <br><br> As you can see, all the plans are being made here. This is why, to reduce the time needed for improving any other building, you have to upgrade this command-post.
+            </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center" style="padding-left: 6%; padding-right: 9%;">
+            <table id="resourcesTable" class="table">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Villagers Distribution</th>
+                </tr>
+
+                <tr>
+                    <td>Wood</td>
+                    <td th:text="${villagers.villagersForWood}"></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="moveVillagersToWood">
+                            <input type="submit" value="+">
+                        </form>
+                    </td>
+                    <td class="text7">
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="removeVillagersFromWood">
+                            <input type="submit" value="-">
+                        </form>
+                    </td>
+                    <td> <span th:text="${villagers.villagersForWood}"></span> Wood every <span th:text="${resourcesPerHour.woodPerHour}"></span> seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Clay</td>
+                    <td th:text="${villagers.villagersForClay}"></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="moveVillagersToClay">
+                            <input type="submit" value="+">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="removeVillagersFromClay">
+                            <input type="submit" value="-">
+                        </form>
+                    </td>
+                    <td> <span th:text="${villagers.villagersForClay}"></span> Clay every <span th:text="${resourcesPerHour.clayPerHour}"></span> seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Stone</td>
+                    <td th:text="${villagers.villagersForStone}"></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="moveVillagersToStone">
+                            <input type="submit" value="+">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="removeVillagersFromStone">
+                            <input type="submit" value="-">
+                        </form>
+                    </td>
+                    <td> <span th:text="${villagers.villagersForStone}"></span> Stone every <span th:text="${resourcesPerHour.stonePerHour}"></span> seconds</td>
+                </tr>
+                <tr>
+                    <td>Iron</td>
+                    <td th:text="${villagers.villagersForIron}"></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="moveVillagersToIron">
+                            <input type="submit" value="+">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="removeVillagersFromIron">
+                            <input type="submit" value="-">
+                        </form>
+                    </td>
+                    <td> <span th:text="${villagers.villagersForIron}"></span> Iron every <span th:text="${resourcesPerHour.ironPerHour}"></span> seconds</td>
+                </tr>
+                <tr>
+                    <td>Food</td>
+                    <td th:text="${villagers.villagersForFood}"></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="moveVillagersToFood">
+                            <input type="submit" value="+">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                            <input type="hidden" name="action" value="removeVillagersFromFood">
+                            <input type="submit" value="-">
+                        </form>
+                    </td>
+                    <td> <span th:text="${villagers.villagersForFood}"></span> Food every <span th:text="${resourcesPerHour.foodPerHour}"></span> seconds</td>
+                </tr>
+                <tr>
+                    <td>Rest</td>
+                    <td th:text="${villagers.availableVillagers}"></td>
+                    <td></td>
+                    <td>
+                        <form method="POST" action="mainbuildingview">
+                        <input type="hidden" name="action" value="createNewVillager">
+                        <input type="submit" value="Create villager">
+                        </form>
+                    </td>
+
+                    <td>Costs 50 Food units</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="buildingLive" style="text-align:center; line-height:3"></div>
+
+    <div class="col-md-12" style="padding-left: 8%; padding-right: 11%; padding-top: 1%;">
+        <table id="upgradeTable" class="table" style="text-align: center;">
+            <tr>
+                <th>Name of the Building</th>
+                <th>Current Level</th>
+                <th>Wood required</th>
+                <th>Clay required</th>
+                <th>Stone required</th>
+                <th>Iron required</th>
+                <th>Time required</th>
+                <th>Upgrade</th>
+            </tr>
+
+            <tr>
+                <td><a href="/mainbuildingview">Main Building</a></td>
+                <td><p id="currentMainBuildingLevel" th:text="${levels.mainBuildingLevel}"/></td>
+                <td><p th:text="${mainBuildingUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${mainBuildingUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${mainBuildingUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${mainBuildingUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeMainBuilding">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/resources/claymine">Clay Mine</a></td>
+                <td><p id="currentClayMineLevel" th:text="${levels.clayMineLevel}"/></td>
+                <td><p th:text="${clayMineUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${clayMineUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${clayMineUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${clayMineUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeClayMine">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/resources/woodmine">Wood Mine</a></td>
+                <td><p id="currentWoodMineLevel" th:text="${levels.woodMineLevel}"/></td>
+                <td><p th:text="${woodMineUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${woodMineUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${woodMineUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${woodMineUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeWoodMine">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/resources/stonemine">Stone Mine</a></td>
+                <td><p id="currentStoneMineLevel" th:text="${levels.stoneMineLevel}"/></td>
+                <td><p th:text="${stoneMineUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${stoneMineUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${stoneMineUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${stoneMineUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeStoneMine">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/resources/ironmine">Iron Mine</a></td>
+                <td><p id="currentIronMineLevel" th:text="${levels.ironMineLevel}"/></td>
+                <td><p th:text="${ironMineUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${ironMineUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${ironMineUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${ironMineUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeIronMine">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/constructions/farm">Farm</a></td>
+                <td><p id="currentFarmLevel" th:text="${levels.farmLevel}"/></td>
+                <td><p th:text="${farmUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${farmUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${farmUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${farmUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeFarm">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/constructions/warehouse">Warehouse</a></td>
+                <td><p id="currentWarehouseLevel" th:text="${levels.warehouseLevel}"/></td>
+                <td><p th:text="${warehouseUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${warehouseUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${warehouseUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${warehouseUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeWarehouse">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+            <tr>
+                <td><a href="/constructions/wall">Wall</a></td>
+                <td><p id="currentWallLevel" th:text="${levels.wallLevel}"/></td>
+                <td><p th:text="${wallUpgradeReq.requestedWood}"/></td>
+                <td><p th:text="${wallUpgradeReq.requestedClay}"/></td>
+                <td><p th:text="${wallUpgradeReq.requestedStone}"/></td>
+                <td>0</td>
+                <td><p th:text="${wallUpgradeReq.secondsUpgradeCost}"/></td>
+                <td><form method="POST" action="mainbuildingview">
+                    <input type="hidden" name="action" value="upgradeWall">
+                    <input type="submit" value="Upgrade">
+                </form></td>
+            </tr>
+
+        </table>
+    </div>
+    <div>
+        <button class="open-button" onclick="openForm()">Chat</button>
+        <div id="myForm" class="chat-popup" onload="refreshDiv()">
+            <div class="form-container" >
+                <h1>Chat</h1>
+                <button id="refreshButton" onclick="refreshPage()">Refresh</button>
+                <!--suppress XmlInvalidId -->
+                <label for="msg"><b>Message</b></label>
+                <textarea id="totalChat" readonly="true" name="msg"></textarea>
+                <form method="POST" th:action="@{/chat}">
+                    <input type="text" value="" autofocus="autofocus" autocomplete="off" id="bar" th:name="message"/>
+                    <input type="submit" class="btn" value="Send"/>
+                </form>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+        $(document).ready(function(){
+            var updateResources = function(){
+                $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/resources",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;
+                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;
+                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;
+                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;
+                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;
+                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;
+                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;
+
+
+                            if (data.resources.isBuilding == 1) {
+                                document.getElementById('buildingLive').innerHTML = data.resources.toBeUpgraded + " will be completely upgraded in " + data.resources.secondsNeeded + " seconds!";
+                                document.getElementById('buildingLive').style.visibility ="visible";
+                            }
+                            else {
+                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;
+                                document.getElementById('currentClayMineLevel').innerHTML = data.levels.clayMineLevel;
+                                document.getElementById('currentStoneMineLevel').innerHTML = data.levels.stoneMineLevel;
+                                document.getElementById('currentIronMineLevel').innerHTML = data.levels.ironMineLevel;
+                                document.getElementById('currentMainBuildingLevel').innerHTML = data.levels.mainBuildingLevel;
+                                document.getElementById('currentWarehouseLevel').innerHTML = data.levels.warehouseLevel;
+                                document.getElementById('currentFarmLevel').innerHTML = data.levels.farmLevel;
+                                document.getElementById('currentWallLevel').innerHTML = data.levels.wallLevel;
+
+                                document.getElementById('buildingLive').innerHTML = "";
+                                document.getElementById('buildingLive').style.visibility = "hidden";
+                            }
+                            }})};
+
+            setInterval(updateResources, 1000);
+            });
+
+         $(document).ready(function(){
+
+
+            var updateResources = function(){
+                $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/resources",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;
+                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;
+                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;
+                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;
+                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;
+                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;
+                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;
+
+                            if (data.resources.isBuilding == 1) {
+                                document.getElementById('buildingLive').innerHTML = data.resources.toBeUpgraded + " will be completely upgraded in " + data.resources.secondsNeeded + " seconds!";
+                                document.getElementById('buildingLive').style.visibility ="visible";
+                            } else {
+                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;
+                                document.getElementById('buildingLive').innerHTML = "";
+                                document.getElementById('buildingLive').style.visibility = "hidden";
+                            }
+                        }
+                       }
+                   )
+               };
+                var ajaxChat = function(){
+                    $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8081/chatsource",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function(data){
+                            document.getElementById('totalChat').innerHTML = data.totalChat;
+                            document.getElementById("totalChat").scrollTop = document.getElementById("totalChat").scrollHeight;
+                        }})};
+            setInterval(ajaxChat, 500);
+        });
+
+    </script>
+</body>
+
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<style>-->
+<!--    body{-->
+<!--        background: rgb(247, 197, 159);-->
+<!--    }-->
+
+<!--    #buildingLive{-->
+<!--        color: orange;-->
+<!--        font-weight: bold;-->
+<!--        margin-left: 30%;-->
+<!--        font-size: 20px;-->
+<!--    }-->
+
+<!--    #generalView{-->
+<!--        list-style: none;-->
+<!--        background: rgb(7, 0, 77);-->
+<!--        color: #E6E6E6;-->
+<!--        height: 40px;-->
+<!--        margin-left: 13%;-->
+<!--        margin-right: 13%;-->
+<!--        width: 74%;-->
+<!--        margin-bottom: 20px;-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--    }-->
+
+<!--    .link{-->
+<!--        background: rgb(7, 0, 77);-->
+<!--        color: #E6E6E6;-->
+<!--    }-->
+
+<!--    #generalView li{-->
+<!--        display: inline;-->
+<!--        margin: 70px;-->
+<!--    }-->
+
+
+<!--    #resourcesInfoBox{-->
+<!--        background: rgb(91, 75, 73);-->
+<!--        height: 76px;-->
+<!--        border-radius: 40px;-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--        margin-bottom: 20px;-->
+<!--    }-->
+<!--    #resourcesInfoBoxAll {-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--    }-->
+
+<!--    #resourcesInfoBox li{-->
+<!--        display: inline;-->
+<!--        font-weight: bold;-->
+<!--        color: #CACACA;-->
+<!--        margin: 9px;-->
+<!--    }-->
+
+<!--#secondLevel{-->
+<!--  display: flex;-->
+
+<!--}-->
+<!--#descriptionBox{-->
+<!--  color: #242424;-->
+<!--  height: 500px;-->
+<!--  width: 50%;-->
+
+<!--}-->
+
+<!--#text1{-->
+<!--  font-size: 50px;-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--}-->
+
+<!--#text2 {-->
+<!--  font-size: 23px;-->
+<!--  margin-left: 5%;-->
+<!--  border: 1px solid black;-->
+<!--  color: #1A1A1A;-->
+<!--  margin-left: 10px;-->
+<!--}-->
+
+<!--#text3 {-->
+<!--  font-size: 23px;-->
+<!--  margin-left: 5%;-->
+<!--  border: 1px solid black;-->
+<!--  color: #0A1344;-->
+<!--  margin-left: 10px;-->
+<!--}-->
+
+<!--#distributionBox{-->
+<!--  background: rgba(35, 150, 127);-->
+<!--  height: 30%;-->
+<!--  width: 50%;-->
+<!--  float: right;-->
+<!--  border-radius: 40px;-->
+<!--}-->
+<!--#lbox2{-->
+<!--  width: 80%;-->
+<!--  margin-top: 5%;-->
+<!--  margin-bottom: 5%;-->
+<!--  margin-left: 8%;-->
+<!--  margin-right: 10%;-->
+<!--  text-align: center;-->
+<!--  font-style: italic;-->
+<!--  font-size: smaller;-->
+<!--  border: thin silver solid;-->
+<!--  padding: 23px;-->
+<!--}-->
+<!--.text4{-->
+<!--  display: flex;-->
+<!--  font-size: 35px;-->
+<!--  margin-left: 45px;-->
+<!--  margin-right: 30px;-->
+<!--}-->
+<!--.text5{-->
+<!--  display: flex inline;-->
+<!--  margin-right: 20px;-->
+<!--  text-align: center;-->
+<!--  font-style: italic;-->
+<!--  font-size: smaller;-->
+<!--  border: thin silver solid;-->
+<!--  font-size: 35px;-->
+<!--}-->
+<!--.text6{-->
+<!--  margin-left: 40px;-->
+<!--  display: flex;-->
+<!--  font-size: 40px;-->
+<!--}-->
+<!--.text7{-->
+<!--  display: flex inline;-->
+<!--  font-size: 45px;-->
+<!--}-->
+<!--#text8{-->
+<!--  font-size: 45px;-->
+<!--}-->
+<!--#text9{-->
+<!--  font-size: 40px;-->
+<!--}-->
+
+<!--#buildingsBox{-->
+<!--  background: rgba(125, 175, 156);-->
+<!--  display: flex;-->
+<!--  justify-content: center;-->
+<!--  border: thin gold solid;-->
+<!--  height: 100%;-->
+<!--  width: 60%;-->
+<!--  margin-left: 20%;-->
+<!--  margin-right: 20%;-->
+<!--  margin-top: 50px;-->
+<!--  margin-bottom: 30px;-->
+<!--}-->
+
+<!--#distributionBox2{-->
+<!--  margin-top: 15px;-->
+<!--  float: right;-->
+<!--  height: 275px;-->
+<!--  width: 48%;-->
+<!--  border: thin gold solid;-->
+<!--}-->
+
+<!--.dbBxtext1{-->
+<!--  font-size: 22px;-->
+<!--}-->
+<!--#buildingsBox th {-->
+<!--  font-size: 25px;-->
+<!--}-->
+<!--#buildingsBox td {-->
+<!--  font-size: 20px;-->
+<!--  text-align: center;-->
+<!--}-->
+
+
+
+
+
+<!--* {box-sizing: border-box;}-->
+
+<!--/* Button used to open the chat form - fixed at the bottom of the page */-->
+<!--.open-button {-->
+<!--  background-color: #555;-->
+<!--  color: white;-->
+<!--  padding: 16px 20px;-->
+<!--  border: none;-->
+<!--  cursor: pointer;-->
+<!--  opacity: 0.8;-->
+<!--  position: fixed;-->
+<!--  bottom: 23px;-->
+<!--  right: 28px;-->
+<!--  width: 280px;-->
+<!--}-->
+
+<!--/* The popup chat - hidden by default */-->
+<!--.chat-popup {-->
+<!--  display: block;-->
+<!--  position: fixed;-->
+<!--  bottom: 0;-->
+<!--  right: 15px;-->
+<!--  border: 3px solid #f1f1f1;-->
+<!--  z-index: 9;-->
+<!--}-->
+
+<!--/* Add styles to the form container */-->
+<!--.form-container {-->
+<!--  max-width: 300px;-->
+<!--  padding: 10px;-->
+<!--  background-color: white;-->
+<!--}-->
+
+<!--/* Full-width textarea */-->
+<!--.form-container textarea {-->
+<!--  width: 100%;-->
+<!--  padding: 15px;-->
+<!--  margin: 5px 0 22px 0;-->
+<!--  border: none;-->
+<!--  background: #f1f1f1;-->
+<!--  resize: none;-->
+<!--  min-height: 200px;-->
+<!--}-->
+
+<!--/* When the textarea gets focus, do something */-->
+<!--.form-container textarea:focus {-->
+<!--  background-color: #ddd;-->
+<!--  outline: none;-->
+<!--}-->
+
+<!--/* Set a style for the submit/send button */-->
+<!--.form-container .btn {-->
+<!--  background-color: #04AA6D;-->
+<!--  color: white;-->
+<!--  padding: 16px 20px;-->
+<!--  border: none;-->
+<!--  cursor: pointer;-->
+<!--  width: 100%;-->
+<!--  margin-bottom:10px;-->
+<!--  opacity: 0.8;-->
+<!--}-->
+
+<!--/* Add a red background color to the cancel button */-->
+<!--.form-container .cancel {-->
+<!--  background-color: red;-->
+<!--}-->
+
+<!--/* Add some hover effects to buttons */-->
+<!--.form-container .btn:hover, .open-button:hover {-->
+<!--  opacity: 1;-->
+<!--}-->
+
+<!--#refreshButton{-->
+<!--    color: red;-->
+<!--    margin-left: 80%;-->
+<!--}-->
+
+<!--</style>-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
+<!--    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+
+<!--</head>-->
+<!--<body>-->
+<!--    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">-->
+<!--        <div class="container-fluid">-->
+<!--            <a class="navbar-brand" href="#">Empire War Game</a>-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--            <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--                <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link active" aria-current="page" href="/mainbuildingview">View Empire</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link active" aria-current="page" href="/map">Map</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link active" aria-current="page" href="/leaderboard">Leaderboard</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="#">Messages</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <form class="d-flex" form-method="post" th:action="@{/logout}">-->
+<!--                    <button class="btn btn-outline-danger" type="submit">Logout</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--    <div class="container-fluid" style="margin-bottom: 0.5%;">-->
+<!--        <div class="d-flex justify-content-center">-->
+<!--            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">-->
+<!--                <div class="btn-group mr-2" role="group" aria-label="First group">-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://image.shutterstock.com/z/stock-photo-a-hands-making-a-pot-on-a-pottery-wheel-illustration-752106979.jpg" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentClay}" id="currentClay"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://pngimage.net/wp-content/uploads/2018/06/legna-png-8.png" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentWood}" id="currentWood"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://as2.ftcdn.net/v2/jpg/02/12/39/71/1000_F_212397184_ssVuNCpsuzPoWcaORkqezOcK8kRpWurE.jpg" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentStone}" id ="currentStone"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://cdn.imgbin.com/0/16/5/imgbin-ingot-iron-ore-steel-metal-iron-18VQmzJ5S2DBNDsjsd2prDpfq.jpg" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentIron}" id="currentIron"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqneO7_g0xkm_cWs93hIkbQWxST1T4ANKFjlPvdFDz_3DKBgtOhTRctTki9jYlEqorTnQ&usqp=CAU" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentFood}" id="currentFood"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="data:image/jpeg;base64,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" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentFarmPopulation}" id="currentFarmPopulation"></p2>-->
+<!--                    </button>-->
+<!--                    <button type="button" class="btn btn-secondary">-->
+<!--                        <span class="badge badge-light">-->
+<!--                            <img src="https://p.turbosquid.com/ts-thumb/VI/HOSqTn/gl9W30iB/woodencabin_sign_img/png/1540322601/300x300/sharp_fit_q85/ea022675f81df3a197c84e8997243c6ed6d9a291/woodencabin_sign_img.jpg" width="30px" height="30px">-->
+<!--                        </span>-->
+<!--                        <p2 th:text="${resources.currentWarehouseSpace}" id="currentWarehouseSpace"></p2>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    -->
+<!--<div id="secondLevel">-->
+<!--    <div id="descriptionBox">-->
+<!--        <p id="text1">Main Building</p>-->
+<!--        <p2 id=text2>-->
+<!--            This is your Main Building. Here you can receive an excellent overview of your entire empire. As you can see on the right, this is the command-place where you can distribute your villagers to collect one of the five basic resources: Food, Clay, Wood, Stone or Iron. From bottom you can, as well, order to start improving any of your buildings. This is one of the most important buildings and also the strategical center of your empire. It is the place where you can hide in case of an enemy attack and the room where you can negotiate strategical offers with your neighbours. As you can see, all the plans are being made here. This is why, in order to reduce the time needed for improving any other building, you have to upgrade this command-post.-->
+<!--        </p2>-->
+<!--    </div>-->
+<!--    <div id="distributionBox">-->
+<!--        <div id="lbox1">-->
+<!--            <div id="lbox2">-->
+<!--                <div id="extra"><p id="text3">Villagers Distribution</p></div>-->
+
+<!--                <div id="distributionBox2">-->
+<!--                    <p class="dbBxtext1"><p2 th:text="${villagers.villagersForClay}"/> Clay every <p2 th:text="${resourcesPerHour.clayPerHour}"></p2> seconds</p>-->
+<!--                    <p class="dbBxtext1"><p2 th:text="${villagers.villagersForWood}"/> Wood every <p2 th:text="${resourcesPerHour.woodPerHour}"></p2> seconds</p>-->
+<!--                    <p class="dbBxtext1"><p2 th:text="${villagers.villagersForStone}"/> Stone every <p2 th:text="${resourcesPerHour.stonePerHour}"></p2> seconds</p>-->
+<!--                    <p class="dbBxtext1"><p2 th:text="${villagers.villagersForIron}"/> Iron every <p2 th:text="${resourcesPerHour.ironPerHour}"></p2> seconds</p>-->
+<!--                    <p class="dbBxtext1"><p2 th:text="${villagers.villagersForFood}"/> Food every <p2 th:text="${resourcesPerHour.foodPerHour}"></p2> seconds</p>-->
+<!--                </div>-->
+<!--                <table class="table-stripped">-->
+<!--                    <tr>-->
+<!--                        <th></th>-->
+<!--                        <th></th>-->
+<!--                        <th></th>-->
+<!--                        <th></th>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="text4">Clay</td>-->
+<!--                        <td class="text5"><p2 th:text="${villagers.villagersForClay}"/></td>-->
+<!--                        <td class="text6">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="moveVillagersToClay">-->
+<!--                                <input type="submit" value="+">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td class="text7">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="removeVillagersFromClay">-->
+<!--                                <input type="submit" value="-">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="text4">Wood</td>-->
+<!--                        <td class="text5"><p2 th:text="${villagers.villagersForWood}"/></td>-->
+<!--                        <td class="text6">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="moveVillagersToWood">-->
+<!--                                <input type="submit" value="+">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td class="text7">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="removeVillagersFromWood">-->
+<!--                                <input type="submit" value="-">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="text4">Stone</td>-->
+<!--                        <td class="text5"><p2 th:text="${villagers.villagersForStone}"/></td>-->
+<!--                        <td class="text6">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="moveVillagersToStone">-->
+<!--                                <input type="submit" value="+">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td class="text7">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="removeVillagersFromStone">-->
+<!--                                <input type="submit" value="-">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="text4">Iron</td>-->
+<!--                        <td class="text5"><p2 th:text="${villagers.villagersForIron}"/></td>-->
+<!--                        <td class="text6">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="moveVillagersToIron">-->
+<!--                                <input type="submit" value="+">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td class="text7">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="removeVillagersFromIron">-->
+<!--                                <input type="submit" value="-">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="text4">Food</td>-->
+<!--                        <td class="text5"><p2 th:text="${villagers.villagersForFood}"/></td>-->
+<!--                        <td class="text6">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="moveVillagersToFood">-->
+<!--                                <input type="submit" value="+">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                        <td class="text7">-->
+<!--                            <form method="POST" action="mainbuildingview">-->
+<!--                                <input type="hidden" name="action" value="removeVillagersFromFood">-->
+<!--                                <input type="submit" value="-">-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td id="text8">Rest</td>-->
+<!--                        <td id="text9"><p2 th:text="${villagers.totalVillagers}"/></td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--    <div id="buildingLive"></div>-->
+
+<!--<div id="buildingsBox">-->
+<!--    <table class="table" div="tableStats">-->
+<!--        <tr>-->
+<!--            <th>Name of the Building</th>-->
+<!--            <th>Current Level</th>-->
+<!--            <th>Wood required</th>-->
+<!--            <th>Clay required</th>-->
+<!--            <th>Gold required</th>-->
+<!--            <th>Iron required</th>-->
+<!--            <th>Time required</th>-->
+<!--            <th>Upgrade</th>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/mainbuildingview">Main Building</a></td>-->
+<!--            <td><p id="currentMainBuildingLevel" th:text="${levels.mainBuildingLevel}"/></td>-->
+<!--            <td><p th:text="${mainBuildingUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${mainBuildingUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${mainBuildingUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${mainBuildingUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeMainBuilding">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/resources/claymine">Clay Mine</a></td>-->
+<!--            <td><p id="currentClayMineLevel" th:text="${levels.clayMineLevel}"/></td>-->
+<!--            <td><p th:text="${clayMineUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${clayMineUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${clayMineUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${clayMineUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeClayMine">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/resources/woodmine">Wood Mine</a></td>-->
+<!--            <td><p id="currentWoodMineLevel" th:text="${levels.woodMineLevel}"/></td>-->
+<!--            <td><p th:text="${woodMineUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${woodMineUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${woodMineUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${woodMineUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeWoodMine">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/resources/stonemine">Stone Mine</a></td>-->
+<!--            <td><p id="currentStoneMineLevel" th:text="${levels.stoneMineLevel}"/></td>-->
+<!--            <td><p th:text="${stoneMineUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${stoneMineUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${stoneMineUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${stoneMineUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeStoneMine">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/resources/ironmine">Iron Mine</a></td>-->
+<!--            <td><p id="currentIronMineLevel" th:text="${levels.ironMineLevel}"/></td>-->
+<!--            <td><p th:text="${ironMineUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${ironMineUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${ironMineUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${ironMineUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeIronMine">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/constructions/farm">Farm</a></td>-->
+<!--            <td><p id="currentFarmLevel" th:text="${levels.farmLevel}"/></td>-->
+<!--            <td><p th:text="${farmUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${farmUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${farmUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${farmUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeFarm">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/constructions/warehouse">Warehouse</a></td>-->
+<!--            <td><p id="currentWarehouseLevel" th:text="${levels.warehouseLevel}"/></td>-->
+<!--            <td><p th:text="${warehouseUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${warehouseUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${warehouseUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${warehouseUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeWarehouse">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--        <tr>-->
+<!--            <td><a href="/constructions/wall">Wall</a></td>-->
+<!--            <td><p id="currentWallLevel" th:text="${levels.wallLevel}"/></td>-->
+<!--            <td><p th:text="${wallUpgradeReq.requestedWood}"/></td>-->
+<!--            <td><p th:text="${wallUpgradeReq.requestedClay}"/></td>-->
+<!--            <td><p th:text="${wallUpgradeReq.requestedStone}"/></td>-->
+<!--            <td>0</td>-->
+<!--            <td><p th:text="${wallUpgradeReq.secondsUpgradeCost}"/></td>-->
+<!--            <td><form method="POST" action="mainbuildingview">-->
+<!--                <input type="hidden" name="action" value="upgradeWall">-->
+<!--                <input type="submit" value="Upgrade">-->
+<!--            </form></td>-->
+<!--        </tr>-->
+
+<!--    </table>-->
+
+<!--    <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>-->
+
+<!--    <button class="open-button" onclick="openForm()">Chat</button>-->
+<!--    <div class="chat-popup" id="myForm" onload="refreshDiv()">-->
+<!--        <div class="form-container" >-->
+<!--            <h1>Chat</h1>-->
+<!--            <button id="refreshButton" onclick="refreshPage()">Refresh</button>-->
+<!--            &lt;!&ndash;suppress XmlInvalidId &ndash;&gt;-->
+<!--            <label for="msg"><b>Message</b></label>-->
+<!--            <textarea id="totalChat" readonly="true" name="msg"></textarea>-->
+<!--            <form method="POST" th:action="@{/chat}">-->
+<!--                <input type="text" value="" autofocus="autofocus" autocomplete="off" id="bar" th:name="message"/>-->
+<!--                <input type="submit" class="btn" value="Send"/>-->
+<!--            </form>-->
+<!--            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+<!--    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+<!--    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>-->
+<!--    <script>-->
+
+<!--        function openForm() {-->
+<!--          document.getElementById("myForm").style.display = "block";-->
+<!--        }-->
+
+<!--        function closeForm() {-->
+<!--          document.getElementById("myForm").style.display = "none";-->
+<!--        }</script>-->
+<!--    <script>-->
+<!--                 $(document).ready(function(){-->
+<!--        var updateResources = function(){-->
+<!--                $.ajax({-->
+<!--                        type: "GET",-->
+<!--                        url: "http://localhost:8081/resources",-->
+<!--                        contentType: "application/json; charset=utf-8",-->
+<!--                        cache: false,-->
+<!--                        success: function(data){-->
+<!--                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;-->
+<!--                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;-->
+<!--                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;-->
+<!--                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;-->
+<!--                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;-->
+<!--                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;-->
+<!--                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;-->
+
+<!--                               console.log(data.resources.secondsNeeded);-->
+
+<!--                                console.log(data.resources.isBuilding);-->
+<!--                            if (data.resources.isBuilding == 1) {-->
+<!--                                document.getElementById('buildingLive').innerHTML = "You have to wait " + data.resources.secondsNeeded + " seconds more!";-->
+<!--                                document.getElementById('buildingLive').style.visibility ="visible";-->
+<!--                            }-->
+<!--                            else {-->
+<!--                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;-->
+<!--                                document.getElementById('currentClayMineLevel').innerHTML = data.levels.clayMineLevel;-->
+<!--                                document.getElementById('currentStoneMineLevel').innerHTML = data.levels.stoneMineLevel;-->
+<!--                                document.getElementById('currentIronMineLevel').innerHTML = data.levels.ironMineLevel;-->
+<!--                                document.getElementById('currentMainBuildingLevel').innerHTML = data.levels.mainBuildingLevel;-->
+<!--                                document.getElementById('currentWarehouseLevel').innerHTML = data.levels.warehouseLevel;-->
+<!--                                document.getElementById('currentFarmLevel').innerHTML = data.levels.farmLevel;-->
+<!--                                document.getElementById('currentWallLevel').innerHTML = data.levels.wallLevel;-->
+
+<!--                                document.getElementById('buildingLive').innerHTML = "";-->
+<!--                                document.getElementById('buildingLive').style.visibility = "hidden";-->
+<!--                            }-->
+<!--                            }})};-->
+
+<!--            setInterval(updateResources, 1000);-->
+<!--            });-->
+
+<!--         $(document).ready(function(){-->
+
+
+<!--            var updateResources = function(){-->
+<!--                $.ajax({-->
+<!--                        type: "GET",-->
+<!--                        url: "http://localhost:8081/resources",-->
+<!--                        contentType: "application/json; charset=utf-8",-->
+<!--                        cache: false,-->
+<!--                        success: function(data){-->
+<!--                            document.getElementById('currentClay').innerHTML = data.resources.currentClay;-->
+<!--                            document.getElementById('currentWood').innerHTML = data.resources.currentWood;-->
+<!--                            document.getElementById('currentStone').innerHTML = data.resources.currentStone;-->
+<!--                            document.getElementById('currentIron').innerHTML = data.resources.currentIron;-->
+<!--                            document.getElementById('currentFood').innerHTML = data.resources.currentFood;-->
+<!--                            document.getElementById('currentFarmPopulation').innerHTML = data.resources.currentFarmPopulation;-->
+<!--                            document.getElementById('currentWarehouseSpace').innerHTML = data.resources.currentWarehouseSpace;-->
+
+<!--                               console.log(data.resources.secondsNeeded);-->
+
+<!--                                console.log(data.resources.isBuilding);-->
+<!--                            if (data.resources.isBuilding == 1) {-->
+<!--                                document.getElementById('buildingLive').innerHTML = "You have to wait " + data.resources.secondsNeeded + " seconds more!";-->
+<!--                                document.getElementById('buildingLive').style.visibility ="visible";-->
+<!--                            }-->
+<!--                            else {-->
+<!--                                document.getElementById('currentWoodMineLevel').innerHTML = data.levels.woodMineLevel;-->
+<!--                                document.getElementById('buildingLive').innerHTML = "";-->
+<!--                                document.getElementById('buildingLive').style.visibility = "hidden";-->
+<!--                            }-->
+<!--                            }})};-->
+<!--            var ajaxChat = function(){-->
+<!--                $.ajax({-->
+<!--                    type: "GET",-->
+<!--                    url: "http://localhost:8081/chatsource",-->
+<!--                    contentType: "application/json; charset=utf-8",-->
+<!--                    cache: false,-->
+<!--                    success: function(data){-->
+<!--                        document.getElementById('totalChat').innerHTML = data.totalChat;-->
+<!--                        document.getElementById("totalChat").scrollTop = document.getElementById("totalChat").scrollHeight;-->
+<!--                    }})};-->
+<!--            setInterval(ajaxChat, 500);-->
+<!--        });-->
+
+<!--    </script>-->
+
+
+<!--</div>-->
+
+<!--</body></html>-->

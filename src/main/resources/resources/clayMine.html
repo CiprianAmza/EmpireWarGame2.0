@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row" style="
+        background: url(/photos/resources-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+    <div class="col-md-6">
+        <div style="padding-top: 20%; padding-left: 18%;">
+            <img class="mx-auto d-block" th:src="@{/gifs/hunting.gif}" style="height: 280px; width: 600px; border-radius: 5px;"/>
+        </div>
+        <div style="padding-top: 8%; padding-left: 28%;">
+            <div style="width: 580px">
+                Here your villagers are working very hard in order to obtain as much clay units as possible for pottery and construction products, such as bricks and walls.
+                Clay will help you gather points, upgrade your current level and build your Empire.
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div style="padding-left: 11%; padding-top: 10%; padding-right: 32%;">
+            <h1 style="text-align: center;"><strong>Clay Mine</strong></h1>
+        </div>
+        <div style="padding-top: 12%; padding-left: 10%;">
+            <table style="background: rgba(255,255,255,0.5); opacity:1.7; width: 580px; text-align: center;">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr style="font-weight: bold;">
+                    <td>Current level</td>
+                    <td>Max level</td>
+                    <td>Current production of Clay</td>
+                    <td>Production of Clay at next level</td>
+                </tr>
+                <tr>
+                    <td><p2 th:text="${levels.clayMineLevel}"/></td>
+                    <td><p2 th:text="${levels.maxClayMineLevel}"/></td>
+                    <td>1 unit every <p2 th:text="${clayPerHour}"/> seconds</td>
+                    <td>1 unit every <p2 th:text="${clayPerHourAtNextLevel}"/> seconds</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

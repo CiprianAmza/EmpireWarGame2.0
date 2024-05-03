@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+  <body>
+    <div layout:fragment="content" class="row" style="
+        background: url(/photos/building-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+        <div class="col-md-6">
+            <div style="padding-top: 21%; padding-left: 14%;">
+                <img class="mx-auto d-block" th:src="@{/gifs/farm.gif}" style="height: 280px; width: 600px; border-radius: 5px;"/>
+            </div>
+            <div style="padding-top: 7%; padding-left: 28%;">
+                <div style="width: 500px;
+                            background: rgba(255,255,255,0.5);
+                            opacity:0.7;
+                            position: absolute;">
+                    <table style="text-align: center;">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td>Current level</td>
+                            <td>Max level</td>
+                            <td>Current population limit</td>
+                            <td>Population limit at next level</td>
+                        </tr>
+                        <tr>
+                            <td><p2 th:text="${levels.farmLevel}"/><br></td>
+                            <td><p2 th:text="${levels.maxFarmLevel}"/><br></td>
+                            <td><p2 th:text="${currentFarmPopulation}"/><br></td>
+                            <td><p2 th:text="${farmPopulationLimitAtNextLevel}"/><br></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="container-fluid" style="padding-left: 11%; padding-top: 25%; padding-right: 35%; padding-bottom: 28%;">
+                <h1 style="text-align: center;"><strong>The Farm</strong></h1>
+                <br>
+                Crop farming and cattle in Empire war provide resources that a villager could not otherwise obtain naturally in order to be self-sufficient. Even in a peaceful world, growing crops and cattle can be a renewable source of food and materials which can be helpful for in-game progression and animal breeding. <br><br> In order to create more soldiers or to upgrade your buildings, you need to expand the Farm.
+                <br><br> Build up your own farm, complete with crops and cattle so that you can raise your Empire.
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

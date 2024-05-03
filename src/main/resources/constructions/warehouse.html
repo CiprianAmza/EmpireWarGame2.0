@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row" style="
+        background: url(/photos/building-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+    <div class="col-md-6">
+        <div style="padding-top: 21%; padding-left: 14%;">
+            <img class="mx-auto d-block" src="https://cdn.pixabay.com/photo/2013/07/12/12/22/house-145657_960_720.png" style="height: 280px; width: 600px; border-radius: 5px;"/>
+        </div>
+        <div style="padding-top: 7%; padding-left: 28%;">
+            <div style="width: 500px;
+                            background: rgba(255,255,255,0.5);
+                            opacity:0.7;
+                            position: absolute;">
+                <table style="text-align: center;">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td>Current level</td>
+                        <td>Max level</td>
+                        <td>Current warehouse space</td>
+                        <td>Warehouse space at next level</td>
+                    </tr>
+                    <tr>
+                        <td><p2 th:text="${levels.woodMineLevel}"/><br></td>
+                        <td><p2 th:text="${levels.maxWoodMineLevel}"/><br></td>
+                        <td><p2 th:text="${currentWarehouseSpace}"/><br></td>
+                        <td><p2 th:text="${warehouseSpaceAtNextLevel}"/><br></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="container-fluid" style="padding-left: 11%; padding-top: 25%; padding-right: 35%; padding-bottom: 28%;">
+            <h1 style="text-align: center;"><strong>The Warehouse</strong></h1>
+            <br>
+            All your resources are deposited here.The higher the level, the more resources you can store inside.
+            <br><br>
+            Food - feeds the villagers and develop the army.
+            <br><br> Wood - essential to raise the Empire.
+            <br><br> Clay - pottery and construction products.
+            <br><br> Stone - building Fortresses.
+            <br><br> Iron - technologies and all military units.
+        </div>
+    </div>
+</div>
+</body>
+</html>

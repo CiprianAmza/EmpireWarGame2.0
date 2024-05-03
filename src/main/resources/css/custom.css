@@ -1,0 +1,6 @@
+.background-buildings {
+        background: url([[@{/photos/building-background.jpeg}]])
+                    no-repeat center center fixed;
+        background-size: cover;
+        padding-bottom: 56.25%;
+    }

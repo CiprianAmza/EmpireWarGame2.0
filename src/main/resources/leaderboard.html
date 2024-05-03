@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html layout:decorate=~{layout.html}
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+<div layout:fragment="content" class="row" style="
+        background: url(/photos/leaderboard-background.jpeg)
+                    no-repeat center center fixed;
+        background-size: contain;
+        margin-left: 0;
+        width: 100vw;
+        height: 853px;
+        font-family: 'Mali'">
+
+    <div class="col-md-6">
+        <div style="padding-top: 19%; padding-left: 35%; padding-right: 24%; font-size: 160%;">
+            <table class="table" style="text-align: center;">
+                <thead>
+                <tr>
+                    <th scope="col">Position</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Points</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="player: ${players}">
+                    <td th:text="${player.leaderboardPosition}"></td>
+                    <td th:text="${player.username}"></td>
+                    <td th:text="${player.totalPoints}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="container-fluid" style="padding-top: 17%; padding-left: 9%; padding-right: 20%; text-align: center;">
+            <h1 th:text="${players[0].username}" style="font-size: 500%; color: #EBE0CE;"></h1>
+        </div>
+    </div>
+</div>
+</body>
+</html>
